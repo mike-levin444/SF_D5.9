@@ -1,0 +1,67 @@
+Команда	Ответ
+from News_Portal.models import *	
+User.objects.create_user('Ivan')	<User: Ivan>
+User.objects.create_user('Oleg')	<User: Oleg>
+us1 = User.objects.get(id=1)	
+a1 = Author.objects.create(user=us1)	
+us2 = User.objects.get(id=2)	
+a2 = Author.objects.create(user=us2)	
+Category.objects.create(category="Спорт")	
+Category.objects.create(category="Политика")	
+Category.objects.create(category="Здоровье")	
+Category.objects.create(category="Автомобили")	
+p1 = Post.objects.create(post='AR', heading='Мечта или реальность?', text='Наши футболисты выиграли золотую медаль на EURO2024', author=a1)	
+p2 = Post.objects.create(post='AR', heading='Новая карета', text='Отечественными разработчиками в условиях жёстких санкций удалось разработать новую модель автомобиля', author=a1)	
+p3 = Post.objects.create(post='AR', heading='Здоровье на высоте', text='Новая вакцина может вылечить всё!', author=a2)	
+k1 = Category.objects.get(id=1)	
+p1 = Post.objects.get(id=1)	
+p1.category.add(k1)	
+k2 = Category.objects.get(id=2)	
+p1.category.add(k2)	
+p2 = Post.objects.get(id=2)	
+p2.category.add(k2)	
+k4 = Category.objects.get(id=4)	
+p2.category.add(k4)	
+p3 = Post.objects.get(id=3)	
+p3.category.add(k2)	
+k3 = Category.objects.get(id=3)	
+p3.category.add(k3)	
+p1.like()	
+p2.like()	
+p3.like()	
+p2.like()	
+p2.like()	
+p3.dislike()	
+Comment.objects.create(text_comment="Это фейк", post=p1, user=us2)	
+Comment.objects.create(text_comment="Нет, это правда, смотри новости!", post=p1, user=us1)	
+Comment.objects.create(text_comment="А двигатель так и остался от жигулей полюбому)", post=p2, user=us2)	
+Comment.objects.create(text_comment="Это прекрасно!", post=p3, user=us1)	
+c1 = Comment.objects.get(id=1)	
+c2 = Comment.objects.get(id=2)	
+c3 = Comment.objects.get(id=3)	
+c4 = Comment.objects.get(id=4)	
+c1.like()	
+c2.like()	
+c2.like()	
+c3.like()	
+c4.like()	
+c1.dislike()	
+a1.update_rating()	
+a2.update_rating()	
+a1.rating	
+	19
+a2.rating	
+	1
+best_user=Author.objects.order_by('-rating').values('user__username', 'rating').first()	
+best_user	{'user__username': 'Ivan', 'rating': 19}
+best_post_1=Post.objects.order_by('-rating').values('time_in','author__user__username','rating','heading').first()	
+best_post_1	{'time_in': datetime.datetime(2023, 11, 12, 21, 53, 38, 45279), 'author__user__username': 'Ivan', 'rating': 3, 'heading': 'Новая карета'}
+best_post_preview=Post.objects.order_by('-rating').first()	
+best_post_preview.preview()	
+	'Отечественными разработчиками в условиях жёстких санкций удалось разработать новую модель автомобиля...'
+comments_best_post_1=Comment.objects.filter(post=best_post_preview).values('time_in_comment','user','rating','text_comment')	
+comments_best_post_1	
+	<QuerySet [{'time_in_comment': datetime.datetime(2023, 11, 12, 22, 41, 35, 501929), 'user': 2, 'rating': 1, 'text_comment': 'А двигатель так и остался от жигулей полюбому)'}]>
+
+
+
